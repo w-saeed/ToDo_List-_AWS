@@ -34,7 +34,7 @@
           label-for="name-input"
           invalid-feedback="Name is required"
         >
-          <b-form-input id="name-input" v-model="name" required></b-form-input>
+          <b-form-input id="name-input" v-model="name" required minlength="2"></b-form-input>
         </b-form-group>
         <!-- Task description-->
         <b-form-group
@@ -53,10 +53,10 @@
           <b-form-select
             id="input-3"
             v-model="priority"
-            :options="priorityOptions"
+            :options="priorityOptions.slice(1,6)"
+
             required
           ></b-form-select>
-        </b-form-group>
 
         <!-- Attachment
         <div class="form-group">
@@ -67,9 +67,9 @@
             id="exampleFormControlFile1"
           />
         </div>-->
-        <b-button class="btn btn-info mt-3" block @click="AddTask()"
-          >Add</b-button
-        >
+        <b-button type="submit" class="btn btn-info mt-3" block @click="AddTask()"
+          >Add</b-button>
+        </b-form-group>
       </b-modal>
     </div>
 
@@ -95,7 +95,7 @@
           <td
             class="pointer noselect"
             @click="changeStatus(index)"
-            :class="{
+            :class="{ 
               color3: task.status == 0,
               color1: task.status == 1,
               color2: task.status == 2,
@@ -110,18 +110,21 @@
             class="pointer noselect"
             @click="showTodo(task.id)"
           >
-            <b-tooltip :target="'task' + index" triggers="hover">
+            <!-- <b-tooltip :target="'task' + index" triggers="hover">
               {{ task.description }}</b-tooltip
-            >
+            > -->
             <span
               :class="{
                 'line-through': task.status === 2,
               }"
+              v-tooltip.top="task.description"           
             >
               {{ task.task }}
             </span>
           </td>
-          <td class="text-center">
+          <td class="text-center"  :class="{
+                'line-through': task.status === 2,
+              }">
             <div>
               {{ priorityOptions[task.priority] }}
             </div>
@@ -149,6 +152,7 @@
 <script>
 import edit_todolist from "./edit_todolist.vue";
 
+
 export default {
   name: "HelloWorld",
   components: { edit_todolist },
@@ -159,8 +163,8 @@ export default {
     return {
       name: "", //name of the task to add
       description: "", // description of the task
-      priority: null, // priority of the task
-      priorityOptions: ["Very Low", "Low", "Medium", "High", "Very High"], //choosebox options
+      priority: "Medium", // priority of the task
+      priorityOptions: ["", "Very Low", "Low", "Medium", "High", "Very High"], //choosebox options
       statuses: ["To do", "In Progress", "Done"],
       /* Status could be: 'to-do' / 'in-progress' / 'finished' */
       tasks: [],
@@ -195,6 +199,9 @@ export default {
       console.log("task prio: " + this.priority);
 
       console.log(this.$store.state.user.email);
+      if(this.name == "" | this.name.length < 2 | this.name.length > 20)
+        return false;
+      
 
       const priorityValue = this.priorityOptions.indexOf(this.priority);
 
@@ -221,6 +228,7 @@ export default {
           if (response.ok) {
             console.log("task has been added successfully");
             this.$router.push({ name: "Page" });
+            this.refreshTaskList();
             this.name = "";
             this.description = "";
             this.priority = "";
@@ -349,6 +357,7 @@ export default {
           const data = await response.json();
           // check for error response
           if (response.ok) {
+                this.refreshTaskList();
             console.log("task item deleted successfully");
             console.log(data);
           } else {

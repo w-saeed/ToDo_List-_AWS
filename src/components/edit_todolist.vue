@@ -32,7 +32,7 @@
       <b-form-select
         id="input-3"
         :value="Priority[todoobject.priority]"
-        :options="Priority"
+        :options="Priority.slice(1,6)"
         @change="updatePriority"
         required
       ></b-form-select>
@@ -55,7 +55,7 @@ export default {
       taskName: "",
       description: "",
       priority: "",
-      Priority: ["Very Low", "Low", "Medium", "High", "Very High"],
+      Priority: ["", "Very Low", "Low", "Medium", "High", "Very High"],
     };
   },
  created(){

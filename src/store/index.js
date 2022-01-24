@@ -11,7 +11,7 @@ export default new Vuex.Store({
             username: '',
             email: ''
         },
-        serverUri: "http://ec2-52-207-247-18.compute-1.amazonaws.com/WaleedUndMulham/ToDoList/",
+        serverUri: "http://todoLB-1137477303.us-east-1.elb.amazonaws.com/WaleedUndMulham/ToDoList/",
         loggedin: false,
     },
     getters: {},

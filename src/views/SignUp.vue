@@ -39,7 +39,7 @@
 
       <br />
       <p v-show="errors">
-        <b>Password is Wrong or less than 6 characters</b>
+        <b>Passwords does not match</b>
       </p>
 
       <br />
@@ -66,15 +66,13 @@ export default {
         this.password == this.confirmPassword &&
         this.password != "" &&
         this.confirmPassword != ""
-      ) {
-        this.errors = false;
-      } else {
-        this.errors = true;
-      }
+      )
+        return false
+      return true;
     },
     submit() {
-      this.samePassword();
-      if (this.errors == false) {
+      this.errors  = this.samePassword();
+      if (!this.errors) {
         const requestOptions = {
           method: "POST",
           headers: {
@@ -109,9 +107,6 @@ export default {
           });
 
         //this.$router.push({ name: "Home" });
-      }
-      if (this.errors == true) {
-        this.errors = true;
       }
     },
   },

@@ -12,7 +12,10 @@ import router from './router'
 
 import store from "./store";
 
+import Tooltip from 'vue-directive-tooltip';
+import 'vue-directive-tooltip/dist/vueDirectiveTooltip.css';
 
+Vue.use(Tooltip);
 
 
 Vue.config.productionTip = false
